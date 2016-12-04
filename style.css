@@ -20,3 +20,32 @@ header h1 {
   font-size: 48px;
   text-align: center;
 }
+
+.contents {
+  width: 900px;
+  margin: 5px auto 0;
+}
+
+.contents p {
+  font-size: 18px;
+  margin: 16px 0;
+}
+
+.contents .index {
+  height: 960px;
+  background-color: #eaeaea;
+}
+
+.contents .index h2 {
+  font-size: 24px;
+  padding: 10px 0 0 30px;
+}
+
+.contents .index h3 {
+  font-size: 18px;
+}
+
+.contents .index ol {
+  padding: 0 0 0 60px;
+  /*list-style: none;*/
+}
