@@ -23,7 +23,7 @@ header h1 {
 
 .contents {
   width: 900px;
-  margin: 5px auto 0;
+  margin: 5px auto;
 }
 
 .contents p {
@@ -32,7 +32,7 @@ header h1 {
 }
 
 .contents .index {
-  height: 960px;
+  height: 720px;
   background-color: #eaeaea;
 }
 
@@ -48,4 +48,14 @@ header h1 {
 .contents .index ol {
   padding: 0 0 0 60px;
   /*list-style: none;*/
+}
+
+footer {
+  height: 20px;
+  background-color: #dadada;
+}
+
+footer p {
+  text-align: center;
+  font-size: 14px;
 }
