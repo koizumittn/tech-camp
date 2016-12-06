@@ -48,6 +48,20 @@ header h1 {
   font-size: 22px;
 }
 
+article .red-text {
+  color: red;
+}
+
+article .blue-text {
+  color: blue;
+}
+
+
+article .output p {
+  background-color: #dadada;
+  padding: 3px 0 3px 10px;
+}
+
 .contents .index {
   height: 720px;
   background-color: #eaeaea;

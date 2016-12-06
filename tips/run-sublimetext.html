@@ -1,0 +1,121 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>Sublime Text 3をコマンドラインから起動する</title>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>Sublime Text 3をコマンドラインから起動する</h1>
+  </header>
+
+  <!-- コンテンツ -->
+  <div class="contents">
+    <article>
+      <p>
+        コーディングを行う際にSublime Text 3を使うが、これを起動するのが面倒くさい。<br>
+        terminal上のコマンドラインでSublime Text 3を起動できるようにする。
+      </p>
+
+      <h2>コマンドラインからの起動</h2>
+      <p>
+        ターミナルなどのアプリケーションはコマンドラインからファイルを実行することでも起動できる。<br>
+        Sublime Text 3の実行ファイルは<span class="red-text">「/Applications/Sublime Text.app/Contents/SharedSupport/bin/」</span>ディレクトリにある<span class="blue-text">subl</span>というファイルなので、これを実行するとSublime Text 3を起動できる。
+      </p>
+      <div class="output">
+        <p>$ /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl</p>
+      </div>
+      <p>
+        ※バックスラッシュ(\)は空白文字を識別するために挿入している。
+      </p>
+      <p>
+        しかし、毎回こんな長いコマンドを打つのは面倒だし、現実的ではない。
+      </p>
+      <h2>sublだけで起動できるようにする</h2>
+      <p>
+        sublを実行するためにフルパスを指定する必要があるのはシステムのパスが通っていないため。<br>
+        そのため、環境変数のPATHにsublが存在するディレクトリを追加すればsublと打つだけで起動できる。<br>
+        しかし、個々のアプリケーションのためにシステムの環境変数を変更することは望ましくない。
+      </p>
+      <h3>/usr/local/binにシンボリックリンクを作成する</h3>
+      <p>
+        そこで/usr/local/binディレクトリにsublファイルを指定したシンボリックリンクを作る。<br>
+        /usr/local/binディレクトリはユーザがインストールしたソフトウェアのプログラムを配置するためのもので、<br>デフォルトでPATHが通っている。
+      </p>
+      <div class="output">
+        <p>
+          $ echo $PATH<br>
+          /Users/tech-camp/.rbenv/shims:<span class="red-text">/usr/local/bin</span>:/usr/bin:/bin:/usr/sbin:/sbin
+        </p>
+      </div>
+      <p>
+        以下のコマンドで/usr/local/binディレクトリにSublime Text 3を起動するためのシンボリックリンクを作成する。
+      </p>
+      <div class="output">
+        <p>
+          $ ln -s /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl /usr/local/bin/
+        </p>
+      </div>
+      <P>
+        作成したシンボリックリンクを確認。
+      </P>
+      <div class="output">
+        <p>
+          $ ls -l /usr/local/bin | grep subl<br>
+          lrwxr-xr-x  1 tech-camp  admin  62 12  3 11:54 <span class="blue-text">subl</span> -> <span class="red-text">/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl</span>
+        </p>
+      </div>
+      <p>
+        これは/usr/local/binディレクトリにあるsublを実行すると、<br>
+        アプリケーションフォルダ配下のsublが実行されるという意味。<br>
+        そして、/usr/local/binディレクトリにはパスが通っているのでsublと打つだけでSublime Text 3を起動できる。
+      </p>
+      <div class="output">
+        <p>
+          $ subl ( = Sublime Text 3が起動する)
+        </p>
+      </div>
+
+      <h2>ディレクトリを開いた状態で起動する</h2>
+      <p>
+        sublの引数にファイルを指定すると、そのファイルを開いた状態でSublime Text 3を起動できる。
+      </p>
+      <div class="output">
+        <p>
+          $ subl <開きたいファイル名>
+        </p>
+      </div>
+      <p>
+        また、sublの引数にディレクトリを指定するとサイドバーにそのディレクトリが表示された状態でSublime Text 3が起動する。<br>
+        例えば、Railsアプリケーションのトップディレクトリを開きたい時は、ターミナル上でそのディレクトリに移動し、カレントディレクトリを引数に与えてsublを実行すれば良い。
+      </p>
+      <div class="output">
+        <p>
+          $ cd ~/projects/pictweet<br>
+          $ subl .
+        </p>
+      </div>
+      <p>
+        これでcommand + Oでディレクトリを開く必要がなくなる。とても便利。
+      </p>
+
+
+    </article>
+
+    <div class="back">
+      <p><a href="https://koizumittn.github.io/tech-camp/tips">TIPS一覧に戻る</a></p>
+    </div>
+
+  </div>
+
+  <!-- フッター -->
+  <footer>
+    <p>© 2016 Tetsunosuke Koizumi</p>
+  </footer>
+
+</body>
+</html>
