@@ -1,0 +1,76 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>画像にリンクを作成する</title>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>画像にリンクを作成する</h1>
+  </header>
+
+  <!-- コンテンツ -->
+  <div class="contents">
+    <article>
+      <h2>画像にリンクを作成する</h2>
+      <p>
+        テキストをリンクにするためにはaダグを使うが、画像をリンクとしたい場合も同様。<br>
+        リンクとしたい画像のimg要素をaタグで囲んでhref属性にリンク先を指定する。
+      </p>
+      <div class="output">
+        <p>
+          &lt;a href="リンク先のURL"&gt;&lt;img src="画像のURL" ・・・&gt;&lt;/a&gt;
+        </p>
+      </div>
+      <p>表示される画像をクリックすると指定したリンク先へ遷移する。</p>
+
+      <h2>リンク先を新しいタグで開く</h2>
+      <p>
+        a要素にtarget="_blank"という属性を追加すると、リンクをクリックした際に新しいタグで開くことができる。
+      </p>
+      <div class="output">
+        <p>
+          &lt;a href="リンク先のURL" &nbsp;<span class="red-text">target="_blank"</span>&gt;・
+          ・・&lt;/a&gt;
+        </p>
+      </div>
+
+      <h2>テストページ</h2>
+      <p>
+        <a href="https://koizumittn.github.io/classic/contents/001.html" target="_blank">こちら</a>
+      </p>
+      <h3>本当にやりたかったこと</h3>
+      <p>
+        本当はYouTubeの動画を埋め込んでサイト上で再生できるようにしたかった。<br>
+        これは埋め込みたいYouTubeの動画ページで「共有」→「埋め込みコード」と選択し<br>
+        表示されるiframe要素のコードをそのままHTMLにコピペすれば良い。
+      </p>
+      <p>
+        しかし、動画によってはYouTube以外のサイトへの埋め込みを禁止する設定にしており、<br>
+        仕方がないので画像にリンクを貼る形とした。
+      </p>
+      <p>
+        埋め込み可能な動画ではこんな感じ↓
+      </p>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/GPuDrN5GY7s" frameborder="0" allowfullscreen></iframe>
+
+    </div>
+  </article>
+
+  <div class="back">
+    <p><a href="https://koizumittn.github.io/tech-camp/tips">TIPS一覧に戻る</a></p>
+  </div>
+
+</div>
+
+<!-- フッター -->
+<footer>
+  <p>© 2016 Tetsunosuke Koizumi</p>
+</footer>
+
+</body>
+</html>
