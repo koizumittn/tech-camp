@@ -36,6 +36,10 @@ header h1 {
   font-size: 18px;
 }
 
+.contents article p a {
+  color: #da6060;
+}
+
 .contents article h2 {
   font-size: 28px;
   border-left: 3px solid #aaaaff;
@@ -56,10 +60,22 @@ article .blue-text {
   color: #3030ff;
 }
 
+article .sub-text {
+  color: #808080;
+}
 
 article .output p {
   background-color: #dadada;
   padding: 3px 0 3px 10px;
+}
+
+article .result-time {
+  font-size: 40px;
+  color: #707070;
+  /*
+  width: 600px;
+  margin: 0 auto;
+  text-align: center;*/
 }
 
 .contents .index {

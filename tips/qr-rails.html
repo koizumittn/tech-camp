@@ -1,0 +1,347 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>【クイックリファレンス】Railsアプリケーションの作成</title>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>【クイックリファレンス】Railsアプリケーションの作成</h1>
+  </header>
+
+  <!-- コンテンツ -->
+  <div class="contents">
+    <article>
+      <p>
+        Pictweet作成の手順をまとめます。<br>
+        一度作成された方がもう一度コマンドや手順を確認したり、<br>カリキュラムを進める中で嵌ってしまった人の参考になれば幸いです。
+      </p>
+      <p>
+        新規アプリケーションの作成からデータの一覧表示、投稿機能の実装までを行います。<br>
+        本ページの内容が含む範囲はLesson4の項目のうち以下に該当します。<br>
+        <ul>
+          <li>
+            事前準備
+          </li>
+          <li>
+            ページを表示させよう
+          </li>
+          <li>
+            モデルについて学習しよう
+          </li>
+          <li>
+            データをWeb上に表示してみよう
+          </li>
+          <li>
+            入力画面を作ろう
+          </li>
+        </ul>
+      </p>
+      <p>
+        なお、テキストとは順番が異なっている箇所もあります。
+      </p>
+
+      <h2>新規アプリケーションを作成する</h2>
+      <p>
+        projectsディレクトリへ移動し、rails newコマンドを実行。<br>
+        この時-dオプションでバックエンドデータベースに<span class="red-text">MySQL</span>を指定する。
+      </p>
+      <div class="output">
+        <p>
+          $ cd ~/projects &nbsp;<span class="sub-text">#projectsディレクトリに移動</span><br>
+          $ rails _4.2.6_ new pictweet -d mysql &nbsp;<span class="sub-text">#「pictweet」をバージョン4.2.6で作成</span>
+        </p>
+      </div>
+      <p>
+        pictweetディレクトリと種々のファイルが作成されます。<br>
+        pictweetディレクトリに移動しておきます。
+      </p>
+      <div class="output">
+        <p>
+          $ cd pictweet
+        </p>
+      </div>
+      <p>
+        以降、ターミナル上での操作は全てpictweetディレクトリで実行します。
+      </p>
+
+      <h2>Gemの追加</h2>
+      <p>
+        Gemfileを開き、mysql２、sass-railsの指定バージョンを変更する。
+      </p>
+      <div class="output">
+        <p>
+          gem 'mysql2', &nbsp;'~> <span class="red-text">0.3.18</span>'<br>
+          gem 'sass-rails', &nbsp;'~> <span class="red-text">4.0.2</span>'
+        </p>
+      </div>
+      <p>
+        さらに以下の3つのGemを末尾に追加する。
+      </p>
+      <div class="output">
+        <p>
+          gem 'pry-rails'<br>
+          gem 'compass-rails', &nbsp;'~> 2.0'<br>
+          gem 'sprockets', &nbsp;'2.11.0'
+        </p>
+      </div>
+      <p>
+        Gemをインストールする。
+      </p>
+      <div class="output">
+        <p>
+          $ bundle update<br>
+          $ bundle install
+        </p>
+      </div>
+
+      <h2>データベースの作成</h2>
+      <p>
+        以下のコマンドをターミナル上で実行しデータベースを作成する。
+      </p>
+      <div class="output">
+        <p>
+          $ rake db:create
+        </p>
+      </div>
+
+      <h2>ルーティングの作成</h2>
+      <p>
+        routes.rbを開き、以下のように編集する。
+      </p>
+      <div class="output">
+        <p>
+          Rails.application.routes.draw do<br>
+          <span class="red-text">&emsp;get 'tweets' => 'tweets#index'</span><span class="sub-text"> # 一覧画面</span><br>
+          <span class="red-text">&emsp;get 'tweets/new' => 'tweets#new'</span><span class="sub-text"> # 投稿画面</span><br>
+          <span class="red-text">&emsp;post 'tweets' => 'tweets#create'</span><span class="sub-text"> # 投稿機能</span><br>
+          end
+        </p>
+      </div>
+
+      <h2>コントローラの作成</h2>
+      <h3>コントローラの作成</h3>
+      <p>
+        以下のコマンドをターミナル上で実行しコントローラを作成する。
+      </p>
+      <div class="output">
+        <p>
+          $ rails g controller tweets
+        </p>
+      </div>
+      <h3>アクションの追加</h3>
+      <p>
+        tweets_controller.rbを開きindex、new、createアクションを追加する。<br>
+        ※特殊文字の空白が入っているため<strong>コピペ厳禁</strong>です。(要改善。対処がわかる方は教えて下さいm(__)m<br>
+        &emsp;もしくはコピペ後に余計な空白を削除してください。
+      </p>
+      <div class="output">
+        <p>
+          class TweetsController &lt; ApplicationController<br>
+          &emsp;def <span class="red-text">index</span><br>
+          &emsp;&emsp;@tweets = Tweet.all<br>
+          &emsp;end<br>
+          &emsp;<br>
+          &emsp;def <span class="red-text">new</span><br>
+          &emsp;end<br>
+          <br>
+          &emsp;def <span class="red-text">create</span><br>
+          &emsp;&emsp;Tweet.create(tweet_params)<br>
+          &emsp;end<br>
+          <br>
+          &emsp;private<br>
+          &emsp;def <span class="red-text">tweet_params</span><br>
+          &emsp;&emsp;params.permit(:name, :image, :text)<br>
+          &emsp;end<br>
+          end
+        </p>
+      </div>
+
+      <h2>モデルの作成</h2>
+      <h3>モデルクラスの作成</h3>
+      <p>
+        以下のコマンドをターミナル上で実行しコントローラを作成する。
+      </p>
+      <div class="output">
+        <p>
+          $ rails g model tweet
+        </p>
+      </div>
+      <h3>マイグレーションファイルの実行</h3>
+      <p>
+        マイグレーションファイル(db/migrate/2016XXXXXXXXXXXX_create_tweets.rb)を編集する。
+      </p>
+      <div class="output">
+        <p>
+          create_table :tweets do |t|<br>
+          <span class="blue-text">
+            &emsp;t.string&emsp;:name<br>
+            &emsp;t.text&emsp;&emsp;:text<br>
+            &emsp;t.text&emsp;&emsp;:image<br>
+            &emsp;t.timestamps<br>
+          </span>
+          end<br>
+        </p>
+      </div>
+      <p>
+        以下のコマンドをターミナル上で実行し、マイグレーションファイルを実行する。
+      </p>
+      <div class="output">
+        <p>
+          $ rake db:migrate
+        </p>
+      </div>
+
+      <p>
+        ※pictweet_developmentデータベースにtweetsデーブルが作成されているはずなので<br>
+        &emsp;Sequel Proなどで確認します。
+      </P>
+
+      <h2>サンプルデータの登録</h2>
+      <p>
+        サンプルデータを登録します。<br>
+        いくつか方法はありますが、ここではRailsコンソールからデータを登録します。<br>
+        rails cコマンドによりRailsコンソールを起動します。
+      </p>
+      <div class="output">
+        <p>
+          $ rails c<br>
+          Running via Spring preloader in process 5153<br>
+          Loading development environment (Rails 4.2.6)<br>
+          [1] pry(main)>
+        </p>
+      </div>
+      <p>
+        Tweetクラスのcreateメソッドを用いて適当なデータをtweetsデーブルに登録します。<br>
+        以下をコピペしてもらっても構いません。
+      </p>
+      <div class="output">
+        <p>
+          [1] pry(main)>Tweet.create(name: "Michel Jordan", image: "http://goodbuy.fuzz-jpn.com/wp-content/uploads/2014/08/The-100-Most-Iconic-On-Court-Photos-of-Michael-Jordan.jpeg", text: "I can accept failure, but I can't accept not trying")<br>
+          <br>
+          [2] pry(main)>Tweet.create(name: "Allen Iverson", image: "http://files.shandymedia.com/styles/page/s3/images/photos/thefumble/allen-iverson-career-high-60-points-dwight-howard.jpg", text: "I want to look in the mirror and say I did it my way.")
+        </p>
+      </div>
+
+      <h2>ビューの作成</h2>
+      <h3>apptication.html.erb</h3>
+      <p>
+        app/views/layoutsディレクトリのapplication.html.erbを以下のものに置き換える。<br>
+        <a href="http://master.tech-camp.in/filedownload/1">application.html.erb</a>
+      </p>
+      <h3>index.html.erb</h3>
+      <p>
+        <span class="red-text">app/view/tweets</span>ディレクトリに<span class="blue-text">index.html.erb</span>ファイルを作成し、以下のように記述する。
+      </p>
+      <div class="output">
+        <p>
+          &lt;div class="contents row" &gt;<br>
+          &emsp;&lt;% @tweets.each do |tweet| %&gt;<br>
+          &emsp;&emsp;&lt;div class="content_post" style="background-image: url(&lt;%= tweet.image %&gt;);"&gt;<br>
+          &emsp;&emsp;&emsp;&lt;%= simple_format(tweet.text) %&gt;<br>
+          &emsp;&emsp;&emsp;&lt;span class="name"&gt;&lt;%= tweet.name %&gt;&lt;/span&gt;<br>
+          &emsp;&emsp;&lt;/div&gt;<br>
+          &emsp;&lt;% end %&gt;<br>
+          &lt;/div&gt;<br>
+        </p>
+      </div>
+      <h3>new.html.erb</h3>
+      <p>
+        <span class="red-text">app/view/tweets</span>ディレクトリに<span class="blue-text">new.html.erb</span>ファイルを作成し、以下のように記述する。
+      </p>
+      <div class="output">
+        <p>
+          &lt;div class="contents row"&gt;<br>
+          &emsp;&lt;%= form_tag('/tweets', method: :post) do %&gt;<br>
+          &emsp;&emsp;&lt;h3&gt;<br>
+          &emsp;&emsp;&emsp;投稿する<br>
+          &emsp;&emsp;&lt;/h3&gt;<br>
+          &emsp;&emsp;&lt;input placeholder="Nickname" type="text" name="name"&gt;<br>
+          &emsp;&emsp;&lt;input placeholder="Image Url" type="text" name="image"&gt;<br>
+          &emsp;&emsp;&lt;textarea cols="30" name="text" placeholder="text" rows="10"&gt;&lt;/textarea&gt;<br>
+          &emsp;&emsp;&lt;input type="submit" value="SENT"&gt;<br>
+          &emsp;&lt;% end %&gt;<br>
+          &lt;/div&gt;
+        </p>
+      </div>
+      <h3>create.html.erb</h3>
+      <p>
+        <span class="red-text">app/view/tweets</span>ディレクトリに<span class="blue-text">create.html.erb</span>ファイルを作成し、以下のように記述する。
+      </p>
+      <div class="output">
+        <p>
+          &lt;div class="contents row"&gt;<br>
+          &emsp;&lt;div class="success"&gt;<br>
+          &emsp;&emsp;&lt;h3&gt;<br>
+          &emsp;&emsp;&emsp;投稿が完了しました。<br>
+          &emsp;&emsp;&lt;/h3&gt;<br>
+          &emsp;&emsp;&lt;a class="btn" href="/tweets"&gt;投稿一覧へ戻る&lt;/a&gt;<br>
+          &emsp;&lt;/div&gt;<br>
+          &lt;/div&gt;<br>
+        </p>
+      </div>
+
+      <h3>スタイルシート</h3>
+      <p>
+        以下のstyle.scss、setting.cssをapp/assets/stylesheetsディレクトリに配置する。<br>
+        <a href="http://master.tech-camp.in/filedownload/2">style.scss</a><br>
+        <a href="http://master.tech-camp.in/filedownload/3">setting.css</a>
+      </p>
+      <h3>フォントファイル</h3>
+      <p>
+        app/assets/fontsというディレクトリを作成し、<br>以下のフォントファイルをfontsディレクトリに配置する。<br>
+        <a href="http://master.tech-camp.in/filedownload/7">font_1_honokamin.ttf</a>
+      </p>
+
+      <h2>動作確認</h2>
+      <h3>Railsサーバの起動</h3>
+      <p>
+        以下のコマンドをターミナル上で実行し、Railsサーバを起動します。
+      </p>
+      <div class="output">
+        <p>
+          $ rails s
+        </p>
+      </div>
+      <p>
+        Railsサーバは3000番ポートでHTTPリクエストを待ち受けるので、<br>
+        ブラウザで<span class="red-text">http://localhost:3000/tweets</span>にアクセスします。
+      </p>
+      <p>
+        往年のバスケ選手の名言が表示されればOKです。<br>
+        投稿機能も正しく動作するか試してみてください。
+      </p>
+
+      <h2>実際にやってみた</h2>
+      <p>
+        上記の手順で新規アプリケーション作成からデータ表示までに要した時間は・・・
+      </p>
+      <span class="result-time">XX分YY秒！</span><br>
+      <p>
+        早い。。。<br>
+        やはりRialsを使うと簡単にWebサイトを構築できるという印象。<br>
+        特にDB連携なんかはJavaだと苦労した経験があるけど、Railsだとモデルクラス上でやりとりできてしまう。<br>
+        Railsは裏でこの辺を上手くやってくれているはず。<br>
+        エンジニアとしては裏の動作まで理解できるようにしたい。
+      </p>
+    </article>
+
+    <div class="back">
+      <p><a href="https://koizumittn.github.io/tech-camp/tips">TIPS一覧に戻る</a></p>
+    </div>
+
+
+
+  </div>
+
+  <!-- フッター -->
+  <footer>
+    <p>© 2016 Tetsunosuke Koizumi</p>
+  </footer>
+
+</body>
+</html>
