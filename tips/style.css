@@ -83,6 +83,11 @@ article .result-time {
   text-align: center;*/
 }
 
+article .space {
+  height: 900px;
+  background-color: #dadaff;
+}
+
 .contents .index {
   height: 720px;
   background-color: #eaeaea;

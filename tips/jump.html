@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>見出しへジャンプできる目次の作成方法</title>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>見出しへジャンプできる目次の作成方法</h1>
+  </header>å
+
+  <!-- コンテンツ -->
+  <div class="contents">
+    <article>
+      <p>
+        コンテンツが長くなると見出しへジャンプ可能ま目次が欲しくなる。<br>
+        これは簡単に実装できるので、手順を載せます。
+      </p>
+
+      <h2 id="section1">見出しにIDを付与する</h2>
+      <p>
+        ジャンプしたい要素(例えばhタグで表される見出し)にidをつける。
+      </p>
+      <div class="output">
+        <p>
+          &lt;h4 <span class="red-text">id="section1"</span>&gt;見出し1&lt;/h4&gt;
+        </p>
+      </div>
+
+      <h2 id="section2">見出しへジャンプするためのリンクを作成する</h2>
+      <p>
+        aタグを使い、URLは<span class="red-text">ジャンプ先のidに#を付けたもの</span>を指定する。
+      </p>
+      <div class="output">
+        <p>
+          &lt;a href="<span class="red-text">#section1</span>"&gt;見出し1へ&lt;/a&gt;
+        </p>
+      </div>
+
+      <h2 id="section3">動作確認</h2>
+      (無意味なスペース)
+      <div class="space"></div>
+      <p>
+        <a href="#section1">"見出しにIDを付与する"へジャンプ！</a>
+      </p>
+    </article>
+
+    <div class="back">
+      <p><a href="https://koizumittn.github.io/tech-camp/tips">TIPS一覧に戻る</a></p>
+    </div>
+
+  </div>
+
+  <!-- フッター -->
+  <footer>
+    <p>© 2016 Tetsunosuke Koizumi</p>
+  </footer>
+
+</body>
+</html>
