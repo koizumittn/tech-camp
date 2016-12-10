@@ -1,0 +1,141 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>データベースを削除する</title>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>データベースを削除する</h1>
+  </header>
+
+  <!-- コンテンツ -->
+  <div class="contents">
+    <article>
+      <p>
+        pictweetの作成手順をもう一度復習したいと思い、<br>
+        一度作成したRailsアプリケーションディレクトリを消去した。
+      </p>
+      <div class="output">
+        <p>
+          $ cd ~/projects/<br>
+          rm -rf pictweet
+        </p>
+      </div>
+      <p>
+        新たにpictweetアプリケーションを作成し、データベースを作成する。<br>
+        ここで以下のエラーが発生。
+      </p>
+      <div class="output">
+        <p>
+          tech-camp-x-xxx-no-MacBook-Air:pictweet tech-camp$ rake db:create<br>
+          <span class="red-text">pictweet_development already exists</span><br>
+          <span class="red-text">pictweet_test already exists</span>
+        </p>
+      </div>
+
+      <p>
+      前のアプリケーションで作成したデータベースがMySQL上に残っていたことが原因。<br>
+        このままでは新しいデータベースを作成できないので<br>
+        これを削除するための方法をメンターの方に教えて頂きました。
+      </p>
+
+      <h2>Railsでの正しいデータベース削除手順</h2>
+      <p>
+        Railsアプリケーションのトップディレクトリで以下のコマンドを実行することで<br>
+        そのアプリケーションに対応するデータベースが削除される。
+      </p>
+      <div class="output">
+        <p>
+          $ rake db:drop
+        </p>
+      </div>
+      <p>
+        これにより、データベースだけでなくデータベースに紐づくモデルクラスや<br>
+        マイグレーションファイルも削除してくれる。
+      </p>
+      <p>
+        しかし、今回はアプリケーションディレクトリを消去してしまったので、<br>
+        この方法は使えない。
+      </p>
+
+      <h2>Sequel Proを使う</h2>
+      <p>
+        まず、消去したいデータベースを選択し接続する。<br>
+        ウィンドウ上部にあるメニューバーより「データベース」を選択し、<br>
+        プルダウンから「データベースを削除」を選択。<br>
+        ここからデータベースを削除することができる。
+      </p>
+
+      <h2>ターミナル上でMySQLに接続してデータベースを消去する</h2>
+      <p>
+        Sequel Proを使わなくてもターミナル上からMySQLに接続し、<br>
+        直接データベースを操作することもできる。
+      </p>
+      <p>
+        以下のコマンドでMySQLに接続する。
+      </p>
+      <div class="output">
+        <p>
+          $ mysql -u <br>
+          ・・・中略・・・<br>
+          Type 'help;' or '\h' for help. Type '\c' to clear the <br>
+          current input statement.<br>
+          <br>
+          mysql>
+        </p>
+      </div>
+      <p>
+        まず、現在のデータベース一覧を表示する。
+      </p>
+      <div class="output">
+        <p>
+          mysql> show databases;<br>
+          +----------------------------+<br>
+          | Database                   |<br>
+          +----------------------------+<br>
+          | information_schema         |<br>
+          | pictweet_development       |<br>
+          | pictweet_test              |<br>
+          | test                       |<br>
+          +----------------------------+<br>
+        </p>
+      </div>
+      <p>
+        古いアプリケーションのデータベースを削除。<br>
+      </p>
+      <div class="output">
+        <p>
+          mysql> <span class="red-text">drop database</span> pictweet_development;<br>
+          Query OK, 0 rows affected (0.01 sec)<br>
+          mysql> <span class="red-text">drop database </span>pictweet_test;<br>
+          Query OK, 0 rows affected (0.01 sec)
+        </p>
+      </div>
+      <p>
+        ちなみに作る時はcreate database <データベース名＞。
+      </p>
+      <p>
+        でもやっぱり正規の手順でないとスッキリしない。<br>
+        これからはディレクトリ削除の前にrake db:dropをしよう。
+      </p>
+
+    </article>
+
+    <div class="back">
+      <p><a href="https://koizumittn.github.io/tech-camp/tips">TIPS一覧に戻る</a></p>
+    </div>
+
+  </div>
+
+  <!-- フッター -->
+  <footer>
+    <p>© 2016 Tetsunosuke Koizumi</p>
+  </footer>
+
+</body>
+</html>
