@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>関数の引数の渡し方</title>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>関数の引数の渡し方</h1>
+  </header>
+
+  <!-- コンテンツ -->
+  <div class="contents">
+    <article>
+      <p>
+        関数の中で変更された変数は、メイン側の変数も変更されるのか？<br>
+        検証してみます。
+      </p>
+
+      <h2 id="section1">数値オブジェクト</h2>
+      <p>
+        text.rb
+      </p>
+      <div class="output">
+        <p>
+          def function(num)<br>
+          &emsp;num = 100<br>
+          &emsp;puts num<br>
+          end<br>
+          <br>
+          <span class="sub-text"># メイン処理</span><br>
+          num = 1<br>
+          function(num)<br>
+          puts num<br>
+        </p>
+      </div>
+      <p>
+        このソースコードを実行します。
+      </p>
+      <div class="output">
+        <p>
+          $ ruby test.rb<br>
+          100<br>
+          1
+        </p>
+      </div>
+      <p>
+        関数の中でnumに100を代入しているが、メイン側のnumは1のまま。
+      </p>
+
+      <h2 id="section2">文字列オブジェクト</h2>
+      <p>
+        text.rb
+      </p>
+      <div class="output">
+        <p>
+          def function(str)<br>
+          &emsp;str = "Good night!"<br>
+          &emsp;puts str<br>
+          end<br>
+          <br>
+          <span class="sub-text"># メイン処理</span><br>
+          str = "Hello!"<br>
+          function(str)<br>
+          puts str<br>
+        </p>
+      </div>
+      <p>
+        このソースコードを実行します。
+      </p>
+      <div class="output">
+        <p>
+          $ ruby test.rb<br>
+          Good night!<br>
+          Hello!
+        </p>
+      </div>
+      <p>
+        こちらも同じでメイン側のstrは"Hello!"のまま変更されていない。<br>
+        これは、メイン処理で関数を呼び出す際に、<br>
+        メイン関数の変数そのものを引数に渡すのではなく、<br>
+        変数の値をコピーしたものを渡すため。
+      </p>
+      <p>
+        関数内で使う変数はメイン関数のものとは別物なので、<br>
+        別の値を代入してもメイン側の変数は変更されない。
+      </p>
+
+      <h2 id="section3">配列オブジェクト</h2>
+      <p>
+        text.rb
+      </p>
+      <div class="output">
+        <p>
+          def function(ary)<br>
+          &emsp;ary[0] = 'X'<br>
+          &emsp;ary[1] = 'Y'<br>
+          &emsp;ary[2] = 'Z'<br>
+          &emsp;puts "- in fonction -"<br>
+          &emsp;puts ary<br>
+          end<br>
+          <br>
+          <span class="sub-text"># メイン処理</span><br>
+          ary = ['A', 'B', 'C']<br>
+          function(ary)<br>
+          puts "- in Main -"<br>
+          puts ary<br>
+        </p>
+      </div>
+      <p>
+        このソースコードを実行します。
+      </p>
+      <div class="output">
+        <p>
+          $ ruby test.rb<br>
+          - in function -<br>
+          X<br>
+          Y<br>
+          Z<br>
+          - in Main -<br>
+          X<br>
+          Y<br>
+          Z<br>
+        </p>
+      </div>
+      <p>
+        メイン側の変数が書き換わっている！？
+      </p>
+
+      <h2 id="secion4">ハッシュオブジェクト</h2>
+      <div class="output">
+        <p>
+          def function(has)<br>
+          &emsp;has[:name] = "koizumi"<br>
+          &emsp;has[:age] = 27<br>
+          &emsp;puts "- in fonction -"<br>
+          &emsp;puts has<br>
+          end<br>
+          <br>
+          <span class="sub-text"># メイン処理</span><br>
+          has = {name: "satou", age: 23}<br>
+          function(has)<br>
+          puts "- in Main -"<br>
+          puts has<br>
+        </p>
+      </div>
+      <p>
+        このソースコードを実行します。
+      </p>
+      <div class="output">
+        <p>
+          $ ruby test.rb<br>
+          - in function -<br>
+          {:name=>"koizumi", :age=>27}<br>
+          - in Main -<br>
+          {:name=>"koizumi", :age=>27}<br>
+        </p>
+      </div>
+      <p>
+        こちらもメイン側の値が書き換わっている。<br>
+      </p>
+      <p>
+        これは(恐らく)参照渡しを行っているため。<br>
+        引数には値のコピーではなく、変数のアドレス(C言語でいうポインタ)を渡しているので、<br>関数内で別の値を代入するとメイン側の変数にも反映される。<br>
+      </p>
+      <p>
+        一方、値のコピーを渡すやり方は値渡しという。
+      </p>
+
+      <h2 id="section5">まとめ</h2>
+      <p>
+        今回の結果をまとめると以下のようになる。
+      </p>
+      <table border="1">
+        <tr>
+          <th>オブジェクト</th>
+          <th>引数の渡し方</th>
+        </tr>
+        <tr>
+          <td>数値オブジェクト</td>
+          <td>値渡し</td>
+        </tr>
+        <tr>
+          <td>文字列オブジェクト</td>
+          <td>値渡し</td>
+        </tr>
+        <tr>
+          <td>配列オブジェクト</td>
+          <td>参照渡し</td>
+        </tr>
+        <tr>
+          <td>ハッシュオブジェクト</td>
+          <td>参照渡し</td>
+        </tr>
+      </table>
+      <p>
+        Rubyでは文字列も値渡しなのか！<br>
+        というか、そもそもRubyは全てオブジェクトなので本質的には全て参照渡しなのでは？<br>
+        疑問は尽きないが今回はこれくらいで。
+      </p> 
+    </article>
+
+    <div class="back">
+      <p><a href="https://koizumittn.github.io/tech-camp/tips">TIPS一覧に戻る</a></p>
+    </div>
+
+  </div>
+
+  <!-- フッター -->
+  <footer>
+    <p>© 2016 Tetsunosuke Koizumi</p>
+  </footer>
+
+</body>
+</html>
