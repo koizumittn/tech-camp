@@ -1,0 +1,154 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>マイグレーションで使えるデータ型一覧</title>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>マイグレーションで使えるデータ型一覧</h1>
+  </header>
+
+  <!-- コンテンツ -->
+  <div class="contents">
+    <article>
+      <p>
+        pictweetの作成ではマイグレーションファイルにstring、textと書いて実行すると<br>
+        MySQLのデータベース上でそれぞれVARCHAR型(255)、TEXT型のカラムとなった。
+      </p>
+      <p>
+        では他のデータ型のカラムを作成するにはどうすれば良い？ と思い、<br>
+        調査してみました。
+      </p>
+      <h4 id="index">INDEX</h4>
+      <ul>
+        <li><a href="#section1">マイグレーションで使えるデータ型一覧</a></li>
+        <li><a href="#section2">検証してみる</a></li>
+      </ul>
+      <h2 id="section1">マイグレーションで使えるデータ型一覧</h2>
+      <p>
+        <a href="http://ruby-rails.hatenadiary.com/entry/20140810/1407634200#migration-datatypes" target="_blank">こちら</a>のサイトにまとめがあった。<br>
+        公式ドキュメントではないので網羅はしていないかもしれないが<br>
+        とりあえずこちらを検証する。
+      </p>
+
+      <h2 id="section2">検証してみる</h2>
+      <p>
+        まず検証用に適当なモデルを作成する。
+      </p>
+      <div class="output">
+        <p>
+          $ rails g model test
+        </p>
+      </div>
+      <p>
+        作成された新しいマイグレーションファイルを開き、<br>
+        上記のデータ型のカラムを一通り記述する。
+      </p>
+      <div class="output">
+        <p>
+          class CreateMigrates < ActiveRecord::Migration<br>
+          &emsp;def change<br>
+          &emsp;&emsp;create_table :migrates do |t|</span><br>
+          &emsp;&emsp;&emsp;t.integer :integer<br>
+          &emsp;&emsp;&emsp;t.float :float<br>
+          &emsp;&emsp;&emsp;t.decimal :decimal<br>
+          &emsp;&emsp;&emsp;t.string :string<br>
+          &emsp;&emsp;&emsp;t.text :text<br>
+          &emsp;&emsp;&emsp;t.binary :binary<br>
+          &emsp;&emsp;&emsp;t.datetime :datatime<br>
+          &emsp;&emsp;&emsp;t.timestamp :timestamp<br>
+          &emsp;&emsp;&emsp;t.date :date<br>
+          &emsp;&emsp;&emsp;t.time :time<br>
+          &emsp;&emsp;&emsp;t.boolean  :boolean<br>
+          &emsp;&emsp;&emsp;# t.primary_key :prymay_key<br>
+          &emsp;&emsp;&emsp;t.references  :references<br>
+          &emsp;&emsp;&emsp;t.timestamps<br>
+          &emsp;&emsp;end<br>
+          &emsp;end<br>
+          end
+        </p>
+      </div>
+      <p>
+        primary_keyをコメントアウトしているのは<br>
+        ActiveRecordが自動的に作るidが主キーとして重複するため。
+      </p>
+      <p>
+        編集したマイグレーションファイルを実行する。
+      </p>
+      <div class="output">
+        <p>
+          $ rake db:migrate
+        </p>
+      </div>
+      <p>
+        Sequel Proを使ってデータベースに接続し、<br>
+        生成されたテーブルの構造を確認する。
+      </p>
+      <p>
+        結果は以下の通り。
+      </p>
+      <table border="1">
+        <tr>
+          <th>マイグレーションファイルでの記述</th>
+          <th>MySQL上でのデータ型</th>
+        </tr>
+        <tr>
+          <td>integer</td>
+          <td>INT</td>
+        </tr>
+        <tr>
+          <td>float</td>
+          <td>FLOAT</td>
+        </tr>
+        <tr>
+          <td>decimal</td>
+          <td>DECIMAL</td>
+        </tr>
+        <tr>
+          <td>string</td>
+          <td>VARCHAR(255)</td>
+        </tr>
+        <tr>
+          <td>binary</td>
+          <td>BLOB</td>
+        </tr>
+        <tr>
+          <td>datetime</td>
+          <td>DATETIME</td>
+        </tr>
+        <tr>
+          <td>timestamp</td>
+          <td>DATETIME</td>
+        </tr>
+        <tr>
+        <td>date</td>
+          <td>DATE</td>
+        </tr>
+        <tr>
+          <td>boolean</td>
+          <td>TINYINT</td>
+      </table>
+      <p>
+      TINYINTは1バイトの整数型。<br>
+      今回は以上です。
+      </p>
+    </article>
+
+    <div class="back">
+      <p><a href="https://koizumittn.github.io/tech-camp/tips">TIPS一覧に戻る</a></p>
+    </div>
+
+  </div>
+
+  <!-- フッター -->
+  <footer>
+    <p>© 2016 Tetsunosuke Koizumi</p>
+  </footer>
+
+</body>
+</html>
