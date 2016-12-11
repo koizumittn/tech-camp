@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>Bundlerのはなし</title>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>Bundlerのはなし</h1>
+  </header>
+
+  <!-- コンテンツ -->
+  <div class="contents">
+    <article>
+      <p>
+        moooviというRailsアプリケーションにmechanizeというGemを追加した。<br>
+        このGemはmooviアプリケーションのみで利用出来るものだと思っていたが、<br>
+        アプリケーション外のディレクトリでもrbファイルに
+      </p>
+      <div class="output">
+        <p>
+          require 'mechanize'
+        </p>
+      </div>
+      <p>
+        と記述すると、Mechanizeオブジェクトを利用することができる。<br>
+        もちろんirbでも可能。
+      </p>
+      <div class="output">
+        <p>
+          $ irb<br>
+          irb(main):001:0> require 'mechanize'<br>
+          => true<br>
+          irb(main):002:0> agent = Mechanize.new<br>
+          => #&lt;Mechanize:0x007fbbb23ae970 <span class="sub-text"># 以下略</span><br>
+          <span class="red-text">→ Mechanizeオブジェクトのインスタンスを生成できている。</span>
+        </p>
+      </div>
+      <p>
+        これにはGemの理解が足りないと感じたのでメンターの方に教えていただきました。
+      </p>
+
+      <h2 id="section1">Bundler</h2>
+      <p>
+        RubyにおけるGemの管理は<span class="red-text">Bundler</span>が行っている。<br>
+        システム全体(すなわちPC自体)が使用するRubyのGemを管理したり、<br>
+        Railsアプリケーション毎にそれぞれが使用するGemの種類やバージョンを管理したりしている。
+      </p>
+
+      <h2 id="section2">ローカルインストールとグローバルインストール</h2>
+      <h3>ローカルインストール</h3>
+      <p>
+        アプリケーションが<span class="red-text">固有に</span>使用するGemをインストールする。<br>
+        ローカルインストールされたGemは、そのアプリケーションのトップディレクトリにて<br>bundle listを実行することで確認できる。
+      </p>
+      <div class="output">
+        <p>
+          $ bundle list<br>
+          Gems included by the bundle:<br>
+          * actionmailer (4.2.5)<br>
+          * actionpack (4.2.5)<br>
+          <span class="sub-text">・・・以下略</span>
+        </p>
+      </div>
+
+      <h3>グローバルインストール</h3>
+      <p>
+        システム全体が使用出来るGemをインストールする。<br>
+        グローバルインストールされたGemは、gem listを実行することで確認できる。
+      </p>
+      <div class="output">
+        <p>
+         $ gem list<br>
+         <br>
+         *** LOCAL GEMS ***<br>
+         <br>
+         actionmailer (4.2.6, 4.2.5, 4.2.1)<br>
+         actionpack (4.2.6, 4.2.5, 4.2.1)<br>
+         <span class="sub-text">・・・以下略</span>
+       </p>
+     </div>
+     <P>
+       ここでの”LOCAL GEMS”はローカルPCのことで、ローカルインストールのことではない。
+     </P>
+
+     <h2 id="section3">インストール時の挙動</h2>
+     <p>
+       ローカルインストールを実行するとグローバルインストールも一緒に実行されるらしい。
+     </p>
+     <h3>ローカルインストールの実行</h3>
+     <p>
+       このことを確認するため、moooviアプリケーションにGemをローカルインストールする。<br>
+       moooviアプリケーションのGemfileを開き末尾に以下を記述する。
+     </p>
+     <div class="output">
+       <p>
+         gem 'mechanize'
+       </p>
+     </div>
+     <p>
+       Gemをインストールする。
+     </p>
+     <div class="output">
+       <p>
+         $ bundle install
+       </p>
+     </div>
+     <h3>Gemの確認</h3>
+     <p>
+       ローカルインストールされたGemを確認する。
+     </p>
+     <div class="output">
+       <p>
+         $ bundle list | grep "mechanize"<br>
+         &emsp;<span class="red-text">* mechanize (2.7.5)</span>
+       </p>
+     </div>
+     <p>
+       確かにmechanizeがインストールされている。<br>
+       念のため別のアプリケーションにはインストールされていないことを確認。
+     </p>
+     <div class="output">
+       <p>
+         $ cd ../pictweet &emsp;<span class="sub-text"># pictweetアプリケーションへ移動</span><br>
+         $ bundle list | grep "mechanize"<br>
+         <span class="sub-text">(何も表示されない)</span>
+       </p>
+     </div>
+     <p>
+       次にグローバルインストールされたGemを確認する。
+     </p>
+     <div class="output">
+       <p>
+        $ gem list | grep "mechanize"<br>
+        <span class="red-text">mechanize (2.7.5)</span>
+       </p>
+     </div>
+     <p>
+     本当だ！ローカルインストールした際に、グローバルインストールも行われている。
+     </p>
+     <p>
+     グローバルの方にもmechanizeがインストールされているので、<br>
+     irbなどでもrequireを指定すれば使うことができる。<br>
+     Gemの管理(すなわちBundler)は奥が深くまだまだ分からないことだらけですが、今回はこの辺で。
+     </p>
+   </article>
+
+   <div class="back">
+    <p><a href="https://koizumittn.github.io/tech-camp/tips">TIPS一覧に戻る</a></p>
+  </div>
+
+</div>
+
+<!-- フッター -->
+<footer>
+  <p>© 2016 Tetsunosuke Koizumi</p>
+</footer>
+
+</body>
+</html>
