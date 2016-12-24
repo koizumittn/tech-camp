@@ -1,0 +1,389 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>ハッシュ引数と省略可能な引数</title>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>ハッシュ引数と省略可能な引数</h1>
+  </header>
+
+  <!-- コンテンツ -->
+  <div class="contents">
+    <div class="wapper clearfix">
+      <div class="left-contents">
+        <article>
+          <p>
+            またまたrubyのメソッドの引数についての話題です。<br>
+            ハッシュ引数と省略可能な引数について調べてみました。
+          </p>
+          <h2 id="section1">普通の引数</h2>
+          <p>
+            普通の引数でメソッドを定義するときはこんな感じ。
+          </p>
+          <p>
+            normalarg.rb
+          </p>
+          <div class="output">
+            <p>
+              def printArg(name, age, job)<br>
+              &emsp;p "name: " + name<br>
+              &emsp;p "age: #{age}"<br>
+              &emsp;p "job: " + job<br>
+              end
+            </p>
+          </div>
+          <p>
+            このメソッドに引数を渡して呼び出します。
+          </p>
+          <div class="output">
+            <p>
+              <span class="sub-text"># Main処理</span><br>
+              printArg("koizumi", 27, "engineer")
+            </p>
+          </div>
+          <p>
+            このソースを実行します。
+          </p>
+          <div class="output">
+            <p>
+              $ ruby normalarg.rb<br> 
+              "name: koizumi"<br>
+              "age: 27"<br>
+              "job: engineer"<br>
+            </p>
+          </div>
+          <p>
+            Main処理ではprintArgメソッド呼び出し時に引数として<br>
+            "koizumi"、27、"engineer"をそれぞれ渡しています。<br>
+            printArgメソッド側ではそれらをputs(pと省略して表記することが可能です)により<br>
+            出力しています<br>
+          </p>
+          <p>
+            このとき、引数に入れる<strong>順番が重要</strong>です。<br>
+            printArgメソッドではname、age、jobの順で引数を宣言していますが<br>
+            Main処理での呼び出し時にも、この順番で引数が渡す必要があります。
+          </p>
+
+          <h2 id="section2">ハッシュ引数</h2>
+          <p>
+            メソッドの定義にて、引数をハッシュオブジェクトのキー値のように宣言することができます。
+          </p>
+          <p>
+            hasharg.rb
+          </p>
+          <div class="output">
+            <p>
+              def printArg(name<span class="blue-text">:</span> , age<span class="blue-text">:</span> , job<span class="blue-text">:</span>)<br>
+              &emsp;p "name: " + name<br>
+              &emsp;p "age: #{age}"<br>
+              &emsp;p "job: " + job<br>
+              end
+            </p>
+          </div>
+          <p>
+            引数の右側にコロンをつけて宣言していることがわかります。<br>
+            このような引数を<span class="red-text">ハッシュ引数</span>と言います。
+          </p>
+          <p>
+            ハッシュ引数を持つメソッドを呼び出す時には、<br>
+            引数にキー値を指定して渡してあげます。
+          </p>
+          <div class="output">
+            <p>
+              printArg(:name => "koizumi", :age => 27, :job => "engineer")
+            </p>
+          </div>
+          <p>
+            このソースを実行します。
+          </p>
+          <div class="output">
+            <p>
+              $ruby hasharg.rb<br>
+              "name: koizumi"<br>
+              "age: 27"<br>
+              "job: engineer"<br>
+            </p>
+          </div>
+          <p>
+            ハッシュ引数の場合、どの引数に渡されたかは<strong>キー値で判断する</strong>ため、<br>
+            引数の順番を入れ替えて呼び出すこともできます。
+          </p>
+          <div class="output">
+            <p>
+              printArg(:age => 27, :job => "engineer", :name => "koizumi")
+            </p>
+          </div>
+          <p>
+            実行します。
+          </p>
+          <div class="output">
+            <p>
+              $ruby hasharg.rb<br>
+              "name: koizumi"<br>
+              "age: 27"<br>
+              "job: engineer"<br>
+              <span class="sub-text"># ちゃんとそれぞれの引数に渡されている</span>
+            </p>
+          </div>
+
+          <h2 id="section3">普通の引数とハッシュ引数を混在させる</h2>
+          <p>
+            ここまで説明した2種類の引数は1つのメソッドに同時に宣言することができます。
+          </p>
+          <p>
+            mixarg.rb
+          </p>
+          <div class="output">
+            <p>
+              def printArg(name, age<span class="red-text">:</span> , job<span class="red-text">:</span>)<br>
+              &emsp;p "name: " + name<br>
+              &emsp;p "age: #{age}"<br>
+              &emsp;p "job: " + job<br>
+              end
+            </p>
+          </div>
+          <p>
+            こちらでは第1引数のnameは普通の引数で、<br>
+            age、jobはハッシュ引数となっています。<br>
+            メソッド呼び出し時はそれぞれ対応する記法で引数を渡します。
+          </p>
+          <div class="output">
+            <p>
+              printArg("koizumi", :age => 27, :job => "engineer")
+            </p>
+          </div>
+          <p>
+            実行します。
+          </p>
+          <div class="output">
+            <p>
+              $ruby mixarg.rb<br>
+              "name: koizumi"<br>
+              "age: 27"<br>
+              "job: engineer"<br>
+              <span class="sub-text"># ちゃんとそれぞれの引数に渡されている</span>
+            </p>
+          </div>
+          <p>
+            普通の引数とハッシュ引数を混在させる場合には気をつけなければならないことがあります。<br>
+            それはメソッド定義時に<strong>ハッシュ引数の後に普通の引数を宣言してはいけない</strong>ということです。<br>
+            これをやると実行時にエラーとなります。
+          </p>
+          <div class="output">
+            <p>
+              def printArg(name:, age:, job)<br>
+              <span class="sub-text"># ハッシュ引数「name」「age」の後に普通の引数「job」を宣言</span><br>
+              ・・・<br>
+              end
+            </p>
+          </div>
+          <p>
+            実行します。
+          </p>
+          <div class="output">
+            <p>
+              $ruby mixarg.rb <br>
+              mixarg.rb:1: syntax error, unexpected tIDENTIFIER<br>
+              def printArg(name:, age:, job)<br>
+              <span class="sub-text"># Syntaxエラーとなってしまう</span>
+            </p>
+          </div>
+          <p>
+            これは普通の引数は渡す順番で判別されるためです。<br>
+            順番が入れ替え可能なハッシュ引数の後に定義してしまうと<br>
+            何番目に渡された引数を扱えばいいのか分からなくなってしまうためです。<br>
+            (この後省略可能な引数も出てくるのでなおさらです。)
+          </p>
+          <p>
+            ここまでをまとめます。
+            <ul>
+              <li>
+                ハッシュ引数は<span class="blue-text">キー値で指定して引数を渡す。</span>
+              </li>
+              <li>
+                普通の引数とハッシュ引数を混在して宣言する場合は、<span class="blue-text">普通の引数を先に宣言する。</span>
+              </li>
+            </ul>
+          </p>
+
+          <h2 id="section4">省略可能な引数</h2>
+          <p>
+            ここまで出てきたメソッドを呼び出す場合、引数を省略することはできません。<br>
+            引数の数が足りないとエラーとなってしまいます。
+          </p>
+          <p>
+            normalarg.rb
+          </p>
+          <div class="output">
+            <p>
+              def printArg(name, age, job)<br>
+              &emsp;p "name: " + name<br>
+              &emsp;p "age: #{age}"<br>
+              &emsp;p "job: " + job<br>
+              end<br>
+              <br>
+              <span class="sub-text"># Main処理</span><br>
+              printArg("koizumi", 27)<br>
+              <span class="sub-text">→「job」に渡す引数を指定していない。</span>
+            </p>
+          </div>
+          <p>
+            実行します。
+          </p>
+          <div class="output">
+            <p>
+              $ ruby normalArg.rb<br>
+              normalArg.rb:1:in `printArg': wrong number of arguments (given 2, expected 3) (ArgumentError)<br>
+              from normalArg.rb:7:in `&lt;main&gt;'<br>
+              <span class="sub-text">→引数が足りないというエラーが発生</span>
+            </p>
+          </div>
+          <p>
+            一方で、メソッドの定義時に引数の<span class="red-text">デフォルト値</span>を指定することができます。<br>
+            デフォルト値を指定した引数は呼び出し時に省略することが可能で<br>
+            その場合はデフォルト値が渡されたものとして扱われます。
+          </p>
+          <p>
+            defaultarg.rb
+          </p>
+          <div class="output">
+            <p>
+              def printArg(name, age, job <span class="red-text">= "free"</span>)<br>
+              <span class="sub-text">→ 引数jobにデフォルト値を指定</span><br>
+              &emsp;p name<br>
+              &emsp;p age<br>
+              &emsp;p job<br>
+              end<br>
+              <br>
+              printArg("koizumi", 27)<br>
+              <span class="sub-text">→ 引数jobを省略して呼び出し</span><br>
+            </p>
+          </div>
+          <p>
+            実行します。
+          </p>
+          <div class="output">
+            <p>
+              $ ruby defaultarg.rb<br>
+              "koizumi"<br>
+              27<br>
+              "free"&emsp;<span class="sub-text">→ デフォルト値が入っている！</span>
+            </p>
+          </div>
+          <p>
+            このようにデフォルト値を指定した引数は省略してメソッドを呼び出すことが可能です。<br>
+            このような引数は呼び出し時に必ずとも必要としないことから<span class="red-text">オプション</span>と呼ばれることもあります。
+          </p>
+          <p>
+            ハッシュ引数にデフォルト値を指定する例もご紹介します。
+          </p>
+          <p>
+            defaultarg2.rb
+          </p>
+          <div class="output">
+            <p>
+              def printArg(name, age: 20, job: "free")<br>
+              &emsp;p name<br>
+              &emsp;p age<br>
+              &emsp;p job<br>
+              end<br>
+              <br>
+              printArg("koizumi", :job => "engineer")
+            </p>
+          </div>
+          <p>
+            実行します。
+          </p>
+          <div class="output">
+            <p>
+              $ruby defaultarg2.rb<br>
+              "koizumi"<br>
+              20<br>
+              "engineer"<br>
+            </p>
+          </div>
+          <p>
+            この例では引数「name」は普通の引数でデフォルト値は指定していません。<br>
+            引数「age」「job」はハッシュ引数であり、それぞれデフォルト値を指定しています。<br>
+          </p>
+          <p>
+            printArgの呼び出しでは、第一引数<strong>"koizumi"</strong>は<strong>name</strong>に渡されます。<br>
+            引数<strong>age</strong>は省略されていて<strong>デフォルト値</strong>が扱われています。<br>
+            引数<strong>job</strong>は<strong>"engineer"</strong>が渡されていて、これがメソッド内で用いられています。<br>
+            このようにデフォルト値を指定している場合でも、通常と同じように引数に渡すことでデフォルト値を上書いて指定することができます。
+          </p>
+
+          <h2 id="section5">Railsでの使用例</h2>
+          <p>
+            printArgの呼び出し方ですが、<br>
+            ハッシュオブジェクトはJSONのように記述することもできました。
+          </p>
+          <div class="output">
+            <p>
+              printArg("koizumi", <span class="blue-text">job: "engineer"</span>) <span class="sub-text">:job => "engineer"と同じ意味</span>
+            </p>
+          </div>
+          <p>
+            そういえばrubyではメソッドの括弧を省略することもできるのでした。
+          </p>
+          <div class="output">
+            <p>
+              printArg &ensp;"koizumi", &ensp;job: "engineer"
+            </p>
+          </div>
+          <p>
+            ん!? こんな感じのどこかで見たことがある気が・・・
+          </p>
+
+          <h3>routes.rb</h3>
+          <div class="output">
+            <p>
+              Rails.application.routes.draw do<br>
+              &emsp;<strong>resources :products, only: :index</strong><br>
+              end
+            </p>
+          </div>
+          <p>
+            resourcesメソッドの第一引数は省略不可能な引数でコントローラ名を指定します。<br>
+            引数「only」はハッシュ引数でonlyをキーとしてindexというシンボルを渡していますね。<br>
+            これは省略可能な引数です。推測ですがメソッド定義側でデフォルト値が指定されているのでしょう。<br>
+            exceptオプションも同様ですね。
+          </p>
+          <p>
+            resourcesメソッド以外にもbefore_actionとかform_forとかでも見られます。<br>
+            知らなくても困ることではありませんが、知っているとRailsの面白さをより感じられるように思います。
+          </p>
+
+        </article>
+      </div>
+
+      <!-- 目次バー -->
+      <div class="right-contents index-fix">
+        <p>INDEX</p>
+          <ol>
+            <li><a href="#section1">普通の引数</li>
+            <li><a href="#section2">ハッシュ引数</li>
+            <li><a href="#section3">普通の引数とハッシュ引数を混在させる</li>
+            <li><a href="#section4">省略可能な引数</li>
+            <li><a href="#section5">Railsでの使用例</li>
+          </ol>
+      </div>
+    </div>
+    <div class="back">
+      <p><a href="https://koizumittn.github.io/tech-camp/tips">TIPS一覧に戻る</a></p>
+    </div>
+
+  </div>
+
+  <!-- フッター -->
+  <footer>
+    <p>© 2016 Tetsunosuke Koizumi</p>
+  </footer>
+
+</body>
+</html>
